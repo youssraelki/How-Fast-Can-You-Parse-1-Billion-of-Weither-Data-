@@ -7,8 +7,8 @@ import java.util.Map;
 public class CityTemperature {
     private static String csvFile = "merged_data[1].csv";
     private static final String CSV_SPLIT_BY = ",";
-    private static final int CITY_INDEX = 1;
-    private static final int TEMPERATURE_INDEX = 2;
+    private static final int CITY_INDEX = 0;  // Modifié pour correspondre à l'indice de la colonne ville
+    private static final int TEMPERATURE_INDEX = 2; // Indice de la température
 
     public static void main(String[] args) {
         long startTime = System.nanoTime(); // Start of time measurement
@@ -57,8 +57,8 @@ public class CityTemperature {
                 continue;
             }
 
-            String city = data[CITY_INDEX];
-            String temperatureStr = data[TEMPERATURE_INDEX];
+            String city = data[CITY_INDEX].trim();
+            String temperatureStr = data[TEMPERATURE_INDEX].trim();
 
             // Check if the temperature data is a valid number
             if (!isNumeric(temperatureStr)) {
@@ -96,7 +96,7 @@ public class CityTemperature {
     }
 
     static boolean isNumeric(String str) {
-        if (str == null) {
+        if (str == null || str.trim().isEmpty()) {
             return false;
         }
         try {
