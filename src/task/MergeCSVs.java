@@ -20,5 +20,5 @@ public class MergeCSVs {
         }
 
         printWriter.close();
-    }
+    }
 }
