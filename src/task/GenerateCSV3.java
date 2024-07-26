@@ -11,7 +11,7 @@ public class GenerateCSV3 {
         LocalDate startDate = LocalDate.of(2020, 1, 1);
         Random random = new Random();
         String[] cities = {"New York", "Los Angeles", "Chicago", "Houston", "Phoenix"};
-        
+
         // Total number of lines to generate
         long totalLines = 10001L;
         try (FileWriter writer = new FileWriter(csvFile)) {
@@ -34,5 +34,5 @@ public class GenerateCSV3 {
             e.printStackTrace();
         }
         System.out.println("CSV file generated successfully!");
-    }
+    }
 }
