@@ -1,6 +1,6 @@
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import java.io.BufCityTemperatureTestferedReader;
+import java.io.BufferedReader;
 import java.io.StringReader;
 import java.util.HashMap;
 import java.util.Map;
