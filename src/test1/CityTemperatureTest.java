@@ -48,4 +48,3 @@ class CityTemperatureTest {
         assertFalse(CityTemperature.isNumeric(null));
     }
 }
-
