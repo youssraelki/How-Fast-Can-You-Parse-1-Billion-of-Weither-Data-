@@ -1,4 +1,5 @@
 import org.junit.jupiter.api.Test;
+import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.PrintWriter;
@@ -23,16 +24,20 @@ class CityTemperatureIntegrationTest {
         // Change the CSV_FILE constant to the temporary file path
         CityTemperature.CSV_FILE = tempFile.getAbsolutePath();
 
+        // Redirect output to ByteArrayOutputStream
+        ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
+        PrintStream originalOut = System.out;
+        System.setOut(new PrintStream(outputStream));
+
         // Run the main method
         CityTemperature.main(new String[]{});
 
-        // Verify the output
-        File outputFile = new File("output.txt");
-        assertTrue(outputFile.exists(), "Output file should be created");
+        // Restore original output
+        System.setOut(originalOut);
 
-        try (Scanner scanner = new Scanner(outputFile)) {
-            assertTrue(scanner.nextLine().contains("Paris: [Max: 36.0, Min: 35.5, Avg: 35.75]"));
-            assertTrue(scanner.nextLine().contains("Berlin: [Max: 32.0, Min: 30.0, Avg: 31.0]"));
-        }
+        // Verify the output
+        String output = outputStream.toString();
+        assertTrue(output.contains("Paris: [Max: 36.0, Min: 35.5, Avg: 35.75]"));
+        assertTrue(output.contains("Berlin: [Max: 32.0, Min: 30.0, Avg: 31.0]"));
     }
 }
