@@ -1,24 +1,63 @@
-name: Java CSV Merge
+name: Java CI and CSV Merge
 
 on:
   push:
-    branches:
-      - main
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
 
 jobs:
-  build_and_merge:
+  build:
     runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v3
+
+    - name: Set up JDK 22
+      uses: actions/setup-java@v3
+      with:
+        java-version: '22'
+
+    - name: Build with Maven
+      run: mvn clean install
+
+    - name: Run tests
+      run: mvn test
+
+  compile_and_run_java:
+    runs-on: ubuntu-latest
+
     steps:
     - name: Checkout repository
       uses: actions/checkout@v2
 
-    - name: Set up JDK
+    - name: Set up JDK 22
       uses: actions/setup-java@v2
       with:
-        java-version: '21'
-        distribution: 'adopt'  # Choisir la distribution de JDK (adopt, zulu, etc.)
+        distribution: 'temurin'
+        java-version: '22'
 
-    - name: Compile Java code
+    - name: Compile Java program
+      run: javac -d out src/test/CityTemperature.java
+
+    - name: Run Java program
+      run: java -cp out CityTemperature
+
+  csv_merge:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v2
+
+    - name: Set up JDK 22
+      uses: actions/setup-java@v2
+      with:
+        java-version: '22'
+        distribution: 'adopt'
+
+    - name: Compile Java code for CSV merge
       run: |
         javac src/task/GenerateCSV1.java
         javac src/task/GenerateCSV2.java
@@ -39,4 +78,4 @@ jobs:
       uses: actions/upload-artifact@v2
       with:
         name: merged_data.csv
-        path: merged_data.csv
+        path: merged_data.csv
