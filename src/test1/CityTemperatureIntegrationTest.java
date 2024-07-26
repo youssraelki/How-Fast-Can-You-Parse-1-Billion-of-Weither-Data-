@@ -27,10 +27,12 @@ class CityTemperatureIntegrationTest {
         CityTemperature.main(new String[]{});
 
         // Verify the output
-        try (Scanner scanner = new Scanner(new File("output.txt"))) {
+        File outputFile = new File("output.txt");
+        assertTrue(outputFile.exists(), "Output file should be created");
+
+        try (Scanner scanner = new Scanner(outputFile)) {
             assertTrue(scanner.nextLine().contains("Paris: [Max: 36.0, Min: 35.5, Avg: 35.75]"));
             assertTrue(scanner.nextLine().contains("Berlin: [Max: 32.0, Min: 30.0, Avg: 31.0]"));
         }
     }
 }
-
