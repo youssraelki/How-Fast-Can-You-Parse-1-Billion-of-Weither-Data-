@@ -5,10 +5,10 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class CityTemperature {
-    public static final String CSV_FILE = "merged_data[1].csv";
-    public static final String CSV_SPLIT_BY = ",";
-    public static final int CITY_INDEX = 1;
-    public static final int TEMPERATURE_INDEX = 2;
+    private static final String CSV_FILE = "merged_data[1].csv";
+    private static final String CSV_SPLIT_BY = ",";
+    private static final int CITY_INDEX = 1;
+    private static final int TEMPERATURE_INDEX = 2;
 
     public static void main(String[] args) {
         long startTime = System.nanoTime(); // Start of time measurement
@@ -35,8 +35,7 @@ public class CityTemperature {
         System.out.println("Mémoire utilisée: " + memoryUsed / 1024 + " KB");
     }
 
-    // Changed from private to public
-    public static void processFile(BufferedReader br, Map<String, double[]> cityTemperatures) throws IOException {
+    private static void processFile(BufferedReader br, Map<String, double[]> cityTemperatures) throws IOException {
         String line;
         // Read and ignore the first line (headers)
         br.readLine();
@@ -74,24 +73,21 @@ public class CityTemperature {
         }
     }
 
-    // Changed from private to public
-    public static void computeAverages(Map<String, double[]> cityTemperatures) {
+    private static void computeAverages(Map<String, double[]> cityTemperatures) {
         for (Map.Entry<String, double[]> entry : cityTemperatures.entrySet()) {
             double[] temps = entry.getValue();
             temps[2] /= temps[3]; // Calculation of the average temperature
         }
     }
 
-    // Changed from private to public
-    public static void printResults(Map<String, double[]> cityTemperatures) {
+    private static void printResults(Map<String, double[]> cityTemperatures) {
         for (Map.Entry<String, double[]> entry : cityTemperatures.entrySet()) {
             double[] temps = entry.getValue();
             System.out.println(entry.getKey() + ": [Max: " + temps[0] + ", Min: " + temps[1] + ", Avg: " + temps[2] + "]");
         }
     }
 
-    // Changed from private to public
-    public static boolean isNumeric(String str) {
+    private static boolean isNumeric(String str) {
         if (str == null) {
             return false;
         }
@@ -102,4 +98,4 @@ public class CityTemperature {
             return false;
         }
     }
-}
+}"
