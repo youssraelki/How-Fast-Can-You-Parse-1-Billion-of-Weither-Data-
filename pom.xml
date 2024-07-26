@@ -7,6 +7,11 @@
     <version>1.0-SNAPSHOT</version>
     <packaging>jar</packaging>
 
+    <properties>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
+    </properties>
+
     <build>
         <sourceDirectory>src/main/java</sourceDirectory>
         <testSourceDirectory>src/test/java</testSourceDirectory>
@@ -32,6 +37,28 @@
                     <includes>
                         <include>**/*Test.java</include>
                     </includes>
+                </configuration>
+            </plugin>
+
+            <!-- Plugin pour les ressources -->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-resources-plugin</artifactId>
+                <version>3.2.0</version>
+                <configuration>
+                    <encoding>UTF-8</encoding>
+                    <resources>
+                        <resource>
+                            <directory>src/main/resources</directory>
+                            <filtering>true</filtering>
+                        </resource>
+                    </resources>
+                    <testResources>
+                        <testResource>
+                            <directory>src/test/resources</directory>
+                            <filtering>false</filtering>
+                        </testResource>
+                    </testResources>
                 </configuration>
             </plugin>
         </plugins>
