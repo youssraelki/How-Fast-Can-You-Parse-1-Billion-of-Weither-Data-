@@ -4,7 +4,7 @@ import java.io.File;
 import java.io.FileWriter;
 import java.io.PrintWriter;
 import java.io.PrintStream;
-import java.util.Scanner;
+import java.nio.file.Files;
 import static org.junit.jupiter.api.Assertions.*;
 
 class CityTemperatureIntegrationTest {
@@ -22,7 +22,7 @@ class CityTemperatureIntegrationTest {
             pw.println("Berlin,2024-07-27,32.0");
         }
 
-        // Change the CSV_FILE constant to the temporary file path
+        // Set the CSV_FILE constant to the temporary file path
         CityTemperature.setCsvFile(tempFile.getAbsolutePath());
 
         // Redirect output to a ByteArrayOutputStream
@@ -38,18 +38,9 @@ class CityTemperatureIntegrationTest {
             System.setOut(originalOut);
         }
 
-        // Save output to a file for verification
-        File outputFile = new File("output.txt");
-        try (PrintWriter pw = new PrintWriter(new FileWriter(outputFile))) {
-            pw.write(outputStream.toString());
-        }
-
-        // Verify the output
-        assertTrue(outputFile.exists(), "Output file should be created");
-
-        try (Scanner scanner = new Scanner(outputFile)) {
-            assertTrue(scanner.nextLine().contains("Paris: [Max: 36.0, Min: 35.5, Avg: 35.75]"));
-            assertTrue(scanner.nextLine().contains("Berlin: [Max: 32.0, Min: 30.0, Avg: 31.0]"));
-        }
+        // Verify the output directly
+        String output = outputStream.toString();
+        assertTrue(output.contains("Paris: [Max: 36.0, Min: 35.5, Avg: 35.75]"));
+        assertTrue(output.contains("Berlin: [Max: 32.0, Min: 30.0, Avg: 31.0]"));
     }
 }
