@@ -8,12 +8,11 @@
     <packaging>jar</packaging>
 
     <build>
-        <!-- Configuration des répertoires des sources et des tests -->
-        <sourceDirectory>src/test</sourceDirectory> <!-- Répertoire du code source -->
-        <testSourceDirectory>src/test1</testSourceDirectory> <!-- Répertoire des tests -->
+        <sourceDirectory>src/main/java</sourceDirectory>
+        <testSourceDirectory>src/test/java</testSourceDirectory>
 
         <plugins>
-            <!-- Plugin de compilation Java -->
+            <!-- Plugin pour la compilation -->
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>
@@ -24,38 +23,17 @@
                 </configuration>
             </plugin>
 
-            <!-- Plugin d'exécution des tests -->
+            <!-- Plugin pour les tests -->
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-surefire-plugin</artifactId>
                 <version>2.22.2</version>
                 <configuration>
                     <includes>
-                        <include>**/*Test.java</include> <!-- Inclut tous les fichiers se terminant par Test.java -->
+                        <include>**/*Test.java</include>
                     </includes>
                 </configuration>
             </plugin>
         </plugins>
     </build>
-
-    <dependencies>
-        <!-- Dépendances pour les tests JUnit -->
-        <dependency>
-            <groupId>org.junit.jupiter</groupId>
-            <artifactId>junit-jupiter-api</artifactId>
-            <version>5.8.2</version>
-            <scope>test</scope>
-        </dependency>
-        <dependency>
-            <groupId>org.junit.jupiter</groupId>
-            <artifactId>junit-jupiter-engine</artifactId>
-            <version>5.8.2</version>
-            <scope>test</scope>
-        </dependency>
-    </dependencies>
-
-    <properties>
-        <maven.compiler.source>22</maven.compiler.source>
-        <maven.compiler.target>22</maven.compiler.target>
-    </properties>
 </project>
