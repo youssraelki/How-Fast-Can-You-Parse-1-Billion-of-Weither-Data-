@@ -25,6 +25,8 @@ class CityTemperatureTest {
 
         CityTemperature.processFile(reader, cityTemperatures);
 
+        // Check if data was processed correctly
+        assertNotNull(cityTemperatures, "cityTemperatures should not be null");
         assertEquals(2, cityTemperatures.size());
         assertArrayEquals(new double[]{36.0, 35.5, 35.75, 2}, cityTemperatures.get("Paris"));
         assertArrayEquals(new double[]{32.0, 30.0, 31.0, 2}, cityTemperatures.get("Berlin"));
