@@ -5,10 +5,11 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class CityTemperature {
-    private static final String CSV_FILE = "merged_data[1].csv";
-    private static final String CSV_SPLIT_BY = ",";
-    private static final int CITY_INDEX = 1;
-    private static final int TEMPERATURE_INDEX = 2;
+    // Accesseurs pour les tests
+    static final String CSV_FILE = "merged_data[1].csv";
+    static final String CSV_SPLIT_BY = ",";
+    static final int CITY_INDEX = 1;
+    static final int TEMPERATURE_INDEX = 2;
 
     public static void main(String[] args) {
         long startTime = System.nanoTime(); // Start of time measurement
@@ -35,14 +36,15 @@ public class CityTemperature {
         System.out.println("Mémoire utilisée: " + memoryUsed / 1024 + " KB");
     }
 
-    private static void processFile(BufferedReader br, Map<String, double[]> cityTemperatures) throws IOException {
+    // Méthodes pour tests
+    static void processFile(BufferedReader br, Map<String, double[]> cityTemperatures) throws IOException {
         String line;
         // Read and ignore the first line (headers)
         br.readLine();
 
         while ((line = br.readLine()) != null) {
             String[] data = line.split(CSV_SPLIT_BY);
-            
+
             // Verify if the line contains the expected number of columns
             if (data.length < 3) {
                 System.err.println("Ligne mal formée: " + line);
@@ -73,21 +75,23 @@ public class CityTemperature {
         }
     }
 
-    private static void computeAverages(Map<String, double[]> cityTemperatures) {
+    // Méthodes pour tests
+    static void computeAverages(Map<String, double[]> cityTemperatures) {
         for (Map.Entry<String, double[]> entry : cityTemperatures.entrySet()) {
             double[] temps = entry.getValue();
             temps[2] /= temps[3]; // Calculation of the average temperature
         }
     }
 
-    private static void printResults(Map<String, double[]> cityTemperatures) {
+    // Méthodes pour tests
+    static void printResults(Map<String, double[]> cityTemperatures) {
         for (Map.Entry<String, double[]> entry : cityTemperatures.entrySet()) {
             double[] temps = entry.getValue();
             System.out.println(entry.getKey() + ": [Max: " + temps[0] + ", Min: " + temps[1] + ", Avg: " + temps[2] + "]");
         }
     }
 
-    private static boolean isNumeric(String str) {
+    static boolean isNumeric(String str) {
         if (str == null) {
             return false;
         }
