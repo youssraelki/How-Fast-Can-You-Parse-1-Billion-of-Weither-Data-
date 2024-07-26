@@ -9,8 +9,8 @@
 
     <build>
         <!-- Configuration des répertoires des sources et des tests -->
-        <sourceDirectory>src/test</sourceDirectory> <!-- Répertoire du code source -->
-        <testSourceDirectory>src/test1</testSourceDirectory> <!-- Répertoire des tests -->
+        <sourceDirectory>src/task</sourceDirectory> <!-- Code source -->
+        <testSourceDirectory>src/test1</testSourceDirectory> <!-- Tests -->
 
         <plugins>
             <!-- Plugin de compilation Java -->
@@ -21,6 +21,9 @@
                 <configuration>
                     <source>22</source>
                     <target>22</target>
+                    <includes>
+                        <include>**/*.java</include>
+                    </includes>
                 </configuration>
             </plugin>
 
@@ -31,7 +34,7 @@
                 <version>2.22.2</version>
                 <configuration>
                     <includes>
-                        <include>**/*Test.java</include> <!-- Inclut tous les fichiers se terminant par Test.java -->
+                        <include>**/*Test.java</include> <!-- Inclut tous les fichiers de test se terminant par Test.java -->
                     </includes>
                 </configuration>
             </plugin>
