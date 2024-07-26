@@ -25,7 +25,8 @@ class CityTemperatureIntegrationTest {
 
         // Redirect output to a file
         File outputFile = new File("output.txt");
-        try (PrintWriter pw = new PrintWriter(outputFile)) {
+        try (PrintWriter pw = new PrintWriter(new FileWriter(outputFile))) {
+            // Set System.out to the PrintWriter to capture output
             System.setOut(pw);
             
             // Run the main method
