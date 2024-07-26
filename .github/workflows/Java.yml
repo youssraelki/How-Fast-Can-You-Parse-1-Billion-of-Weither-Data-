@@ -21,7 +21,7 @@ jobs:
         java-version: '22'
 
     - name: Compile Java program
-      run: javac src/CityTemperature.java
+      run: javac src/test/CityTemperature.java
 
     - name: Run Java program
-      run: java -cp src CityTemperature
+      run: java -cp src/test CityTemperature
