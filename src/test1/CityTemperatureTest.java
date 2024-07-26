@@ -1,51 +1,50 @@
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import java.io.BufferedReader;
 import java.io.StringReader;
-import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 import static org.junit.jupiter.api.Assertions.*;
 
-public class CityTemperatureTest {
+class CityTemperatureTest {
+    private Map<String, double[]> cityTemperatures;
 
-    @Test
-    public void testProcessFile() throws IOException {
-        String csvData = "Header1,Header2,Header3\nCityA,25\nCityB,30\nCityA,20";
-        BufferedReader reader = new BufferedReader(new StringReader(csvData));
-        Map<String, double[]> cityTemperatures = new HashMap<>();
-        
-        CityTemperature.processFile(reader, cityTemperatures);
-        
-        assertEquals(2, cityTemperatures.size());
-        double[] cityAData = cityTemperatures.get("CityA");
-        double[] cityBData = cityTemperatures.get("CityB");
-
-        assertNotNull(cityAData);
-        assertEquals(30.0, cityAData[0]); // Max temperature
-        assertEquals(20.0, cityAData[1]); // Min temperature
-        assertEquals(22.5, cityAData[2]); // Avg temperature
-        
-        assertNotNull(cityBData);
-        assertEquals(30.0, cityBData[0]); // Max temperature
-        assertEquals(30.0, cityBData[1]); // Min temperature
-        assertEquals(30.0, cityBData[2]); // Avg temperature
+    @BeforeEach
+    void setUp() {
+        cityTemperatures = new HashMap<>();
     }
-    
+
     @Test
-    public void testComputeAverages() {
-        Map<String, double[]> cityTemperatures = new HashMap<>();
-        cityTemperatures.put("CityA", new double[]{30.0, 20.0, 45.0, 2}); // Max, Min, Sum, Count
-        cityTemperatures.put("CityB", new double[]{30.0, 30.0, 30.0, 1});
-        
+    void testProcessFile() throws Exception {
+        String data = "City,Date,Temperature\n"
+                    + "Paris,2024-07-26,35.5\n"
+                    + "Paris,2024-07-27,36.0\n"
+                    + "Berlin,2024-07-26,30.0\n"
+                    + "Berlin,2024-07-27,32.0\n";
+        BufferedReader reader = new BufferedReader(new StringReader(data));
+
+        CityTemperature.processFile(reader, cityTemperatures);
+
+        assertEquals(2, cityTemperatures.size());
+        assertArrayEquals(new double[]{36.0, 35.5, 35.75, 2}, cityTemperatures.get("Paris"));
+        assertArrayEquals(new double[]{32.0, 30.0, 31.0, 2}, cityTemperatures.get("Berlin"));
+    }
+
+    @Test
+    void testComputeAverages() {
+        cityTemperatures.put("Paris", new double[]{36.0, 35.5, 71.5, 2});
+        cityTemperatures.put("Berlin", new double[]{32.0, 30.0, 62.0, 2});
+
         CityTemperature.computeAverages(cityTemperatures);
-        
-        double[] cityAData = cityTemperatures.get("CityA");
-        double[] cityBData = cityTemperatures.get("CityB");
-        
-        assertNotNull(cityAData);
-        assertEquals(22.5, cityAData[2]); // Avg temperature
-        
-        assertNotNull(cityBData);
-        assertEquals(30.0, cityBData[2]); // Avg temperature
+
+        assertEquals(35.75, cityTemperatures.get("Paris")[2]);
+        assertEquals(31.0, cityTemperatures.get("Berlin")[2]);
+    }
+
+    @Test
+    void testIsNumeric() {
+        assertTrue(CityTemperature.isNumeric("123.45"));
+        assertFalse(CityTemperature.isNumeric("abc"));
+        assertFalse(CityTemperature.isNumeric(null));
     }
 }
