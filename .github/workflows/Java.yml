@@ -17,6 +17,7 @@ jobs:
     - name: Set up JDK 22
       uses: actions/setup-java@v3
       with:
+        distribution: 'temurin' # Utilisez 'temurin' ou une autre distribution compatible
         java-version: '22'
 
     - name: Build with Maven
@@ -30,10 +31,10 @@ jobs:
 
     steps:
     - name: Checkout repository
-      uses: actions/checkout@v2
+      uses: actions/checkout@v3
 
     - name: Set up JDK 22
-      uses: actions/setup-java@v2
+      uses: actions/setup-java@v3
       with:
         distribution: 'temurin'
         java-version: '22'
@@ -49,33 +50,33 @@ jobs:
 
     steps:
     - name: Checkout repository
-      uses: actions/checkout@v2
+      uses: actions/checkout@v3
 
     - name: Set up JDK 22
-      uses: actions/setup-java@v2
+      uses: actions/setup-java@v3
       with:
+        distribution: 'temurin'
         java-version: '22'
-        distribution: 'adopt'
 
     - name: Compile Java code for CSV merge
       run: |
-        javac src/task/GenerateCSV1.java
-        javac src/task/GenerateCSV2.java
-        javac src/task/GenerateCSV3.java
-        javac src/task/MergeCSVs.java
+        javac -d out src/task/GenerateCSV1.java
+        javac -d out src/task/GenerateCSV2.java
+        javac -d out src/task/GenerateCSV3.java
+        javac -d out src/task/MergeCSVs.java
 
     - name: Generate CSV files
       run: |
-        java -cp src/task GenerateCSV1
-        java -cp src/task GenerateCSV2
-        java -cp src/task GenerateCSV3
+        java -cp out GenerateCSV1
+        java -cp out GenerateCSV2
+        java -cp out GenerateCSV3
 
     - name: Merge CSV files
       run: |
-        java -cp src/task MergeCSVs
+        java -cp out MergeCSVs
 
     - name: Upload merged CSV
-      uses: actions/upload-artifact@v2
+      uses: actions/upload-artifact@v3
       with:
         name: merged_data.csv
         path: merged_data.csv
