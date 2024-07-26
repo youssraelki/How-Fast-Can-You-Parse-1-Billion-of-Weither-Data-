@@ -46,19 +46,7 @@
                 <artifactId>maven-resources-plugin</artifactId>
                 <version>3.2.0</version>
                 <configuration>
-                    <encoding>UTF-8</encoding>
-                    <resources>
-                        <resource>
-                            <directory>src/main/resources</directory>
-                            <filtering>true</filtering>
-                        </resource>
-                    </resources>
-                    <testResources>
-                        <testResource>
-                            <directory>src/test/resources</directory>
-                            <filtering>false</filtering>
-                        </testResource>
-                    </testResources>
+                    <skipNonExistingDirectories>true</skipNonExistingDirectories>
                 </configuration>
             </plugin>
         </plugins>
