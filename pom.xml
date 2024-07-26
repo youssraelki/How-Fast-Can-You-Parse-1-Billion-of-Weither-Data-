@@ -10,11 +10,13 @@
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
+        <maven.compiler.source>22</maven.compiler.source>
+        <maven.compiler.target>22</maven.compiler.target>
     </properties>
 
     <build>
-        <sourceDirectory>src/main/java</sourceDirectory>
-        <testSourceDirectory>src/test/java</testSourceDirectory>
+        <sourceDirectory>src/test</sourceDirectory>
+        <testSourceDirectory>src/test1</testSourceDirectory>
 
         <plugins>
             <!-- Plugin pour la compilation -->
@@ -36,6 +38,7 @@
                 <configuration>
                     <includes>
                         <include>**/*Test.java</include>
+                        <include>**/*IntegrationTest.java</include>
                     </includes>
                 </configuration>
             </plugin>
