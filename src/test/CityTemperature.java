@@ -5,11 +5,10 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class CityTemperature {
-    // Accesseurs pour les tests
-    static final String CSV_FILE = "merged_data[1].csv";
-    static final String CSV_SPLIT_BY = ",";
-    static final int CITY_INDEX = 1;
-    static final int TEMPERATURE_INDEX = 2;
+    private static String csvFile = "merged_data[1].csv";
+    private static final String CSV_SPLIT_BY = ",";
+    private static final int CITY_INDEX = 1;
+    private static final int TEMPERATURE_INDEX = 2;
 
     public static void main(String[] args) {
         long startTime = System.nanoTime(); // Start of time measurement
@@ -17,7 +16,7 @@ public class CityTemperature {
 
         Map<String, double[]> cityTemperatures = new HashMap<>();
 
-        try (BufferedReader br = new BufferedReader(new FileReader(CSV_FILE))) {
+        try (BufferedReader br = new BufferedReader(new FileReader(csvFile))) {
             processFile(br, cityTemperatures);
             computeAverages(cityTemperatures);
             printResults(cityTemperatures);
@@ -36,7 +35,14 @@ public class CityTemperature {
         System.out.println("Mémoire utilisée: " + memoryUsed / 1024 + " KB");
     }
 
-    // Méthodes pour tests
+    public static void setCsvFile(String filePath) {
+        csvFile = filePath;
+    }
+
+    public static String getCsvFile() {
+        return csvFile;
+    }
+
     static void processFile(BufferedReader br, Map<String, double[]> cityTemperatures) throws IOException {
         String line;
         // Read and ignore the first line (headers)
@@ -75,7 +81,6 @@ public class CityTemperature {
         }
     }
 
-    // Méthodes pour tests
     static void computeAverages(Map<String, double[]> cityTemperatures) {
         for (Map.Entry<String, double[]> entry : cityTemperatures.entrySet()) {
             double[] temps = entry.getValue();
@@ -83,7 +88,6 @@ public class CityTemperature {
         }
     }
 
-    // Méthodes pour tests
     static void printResults(Map<String, double[]> cityTemperatures) {
         for (Map.Entry<String, double[]> entry : cityTemperatures.entrySet()) {
             double[] temps = entry.getValue();
