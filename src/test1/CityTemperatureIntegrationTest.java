@@ -1,10 +1,8 @@
 import org.junit.jupiter.api.Test;
-
 import java.io.File;
 import java.io.FileWriter;
 import java.io.PrintWriter;
 import java.util.Scanner;
-
 import static org.junit.jupiter.api.Assertions.*;
 
 class CityTemperatureIntegrationTest {
@@ -35,3 +33,4 @@ class CityTemperatureIntegrationTest {
         }
     }
 }
+
