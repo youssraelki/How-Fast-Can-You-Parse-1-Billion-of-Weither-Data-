@@ -1,0 +1,42 @@
+name: Java CSV Merge
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  build_and_merge:
+    runs-on: ubuntu-latest
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v2
+
+    - name: Set up JDK
+      uses: actions/setup-java@v2
+      with:
+        java-version: '21'
+        distribution: 'adopt'  # Choisir la distribution de JDK (adopt, zulu, etc.)
+
+    - name: Compile Java code
+      run: |
+        javac src/task/GenerateCSV1.java
+        javac src/task/GenerateCSV2.java
+        javac src/task/GenerateCSV3.java
+        javac src/task/MergeCSVs.java
+
+    - name: Generate CSV files
+      run: |
+        java -cp src/task GenerateCSV1
+        java -cp src/task GenerateCSV2
+        java -cp src/task GenerateCSV3
+
+    - name: Merge CSV files
+      run: |
+        java -cp src/task MergeCSVs
+
+    - name: Upload merged CSV
+      uses: actions/upload-artifact@v2
+      with:
+        name: merged_data.csv
+        path: merged_data.csv
