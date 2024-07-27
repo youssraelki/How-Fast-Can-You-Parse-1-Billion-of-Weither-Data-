@@ -5,9 +5,9 @@ This project aims to measure the performance of parsing large CSV files containi
 
 ## Project Structure
 - *src/*: Contains Java code for processing CSV files.
-  - *src/main/CityTemperature.java*: Processes the CSV file to extract and calculate the maximum, minimum, and average temperatures by city.
-  - *src/test/CityTemperatureTest.java*: Contains unit tests for the temperature processing code.
-  - *src/test/CityTemperatureIntegrationTest.java*: Contains integration tests to verify the interaction between different parts of the code.
+  - *main/CityTemperature.java*: Processes the CSV file to extract and calculate the maximum, minimum, and average temperatures by city.
+  - *test/CityTemperatureTest.java*: Contains unit tests for the temperature processing code.
+  - *test/CityTemperatureIntegrationTest.java*: Contains integration tests to verify the interaction between different parts of the code.
 - *.github/workflows/*: Contains YAML files for continuous integration with GitHub Actions.
   - *java.yml*: Workflow to compile and run Java code, as well as to check files and performance.
 - *pom.xml*: Maven configuration file for managing project dependencies and configurations.
