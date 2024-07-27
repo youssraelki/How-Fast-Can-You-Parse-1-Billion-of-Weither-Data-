@@ -5,11 +5,11 @@ This project aims to measure the performance of parsing large CSV files containi
 
 Project Structure
 src/: Contains Java code for processing CSV files.
-main/java/CityTemperature.java: Processes the CSV file to extract and calculate the maximum, minimum, and average temperatures by city.
-test/java/CityTemperatureTest.java: Contains unit tests for the temperature processing code.
-test/java/CityTemperatureIntegrationTest.java: Contains integration tests to verify the interaction between different parts of the code.
+src/main/CityTemperature.java: Processes the CSV file to extract and calculate the maximum, minimum, and average temperatures by city.
+src/test/CityTemperatureTest.java: Contains unit tests for the temperature processing code.
+src/test/CityTemperatureIntegrationTest.java: Contains integration tests to verify the interaction between different parts of the code.
 .github/workflows/: Contains YAML files for continuous integration with GitHub Actions.
-java-ci.yml: Workflow to compile and run Java code, as well as to check files and performance.
+java.yml: Workflow to compile and run Java code, as well as to check files and performance.
 pom.xml: Maven configuration file for managing project dependencies and configurations.
 .gitignore: Contains rules to ignore large files.
 Project Objective
@@ -54,7 +54,6 @@ mvn compile
 mvn exec:java -Dexec.mainClass="CityTemperature"
 Branches
 main: Main branch containing the stable version of the code.
-dev: Development branch for testing new features and improvements.
 Libraries Used
 BufferedReader: Used for efficiently reading CSV files line by line.
 FileReader: Used for opening and reading CSV files.
