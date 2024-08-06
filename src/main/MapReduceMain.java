@@ -6,9 +6,6 @@ import java.util.Map;
 
 public class MapReduceMain {
     private static final String CSV_FILE = "merged_data.csv";
-    private static final String CSV_SPLIT_BY = ",";
-    private static final int CITY_INDEX = 1;
-    private static final int TEMPERATURE_INDEX = 2;
 
     public static void main(String[] args) {
         long startTime = System.nanoTime(); // Start of time measurement
@@ -38,6 +35,10 @@ public class MapReduceMain {
 }
 
 class MapReduceTask {
+    private static final String CSV_SPLIT_BY = ",";
+    private static final int CITY_INDEX = 1;
+    private static final int TEMPERATURE_INDEX = 2;
+
     void processFile(BufferedReader br, Map<String, double[]> cityTemperatures) throws IOException {
         String line;
         // Read and ignore the first line (headers)
@@ -99,4 +100,3 @@ class MapReduceTask {
         }
     }
 }
-
