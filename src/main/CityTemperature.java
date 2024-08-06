@@ -13,7 +13,7 @@ public class CityTemperature {
     public static void main(String[] args) {
         String csvFile = System.getenv(CSV_FILE_ENV);
         if (csvFile == null) {
-            System.err.println("CSV_FILE_PATH");
+            System.err.println("CSV_FILE_PATH n'est pas défini");
             System.exit(1);
         }
 
