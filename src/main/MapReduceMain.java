@@ -4,7 +4,7 @@ import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 
-public class MapReduce {
+public class MapReduceMain {
     private static final String CSV_FILE = "merged_data.csv";
     private static final String CSV_SPLIT_BY = ",";
     private static final int CITY_INDEX = 1;
