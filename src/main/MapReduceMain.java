@@ -5,15 +5,21 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class MapReduceMain {
-    private static final String CSV_FILE = "merged_data[1].csv";
+    private static final String CSV_FILE_ENV = "CSV_FILE_PATH";
 
     public static void main(String[] args) {
+        String csvFile = System.getenv(CSV_FILE_ENV);
+        if (csvFile == null) {
+            System.err.println("CSV_FILE_PATH n'est pas défini");
+            System.exit(1);
+        }
+
         long startTime = System.nanoTime(); // Start of time measurement
         long startMemory = Runtime.getRuntime().totalMemory() - Runtime.getRuntime().freeMemory(); // Start of memory measurement
 
         Map<String, double[]> cityTemperatures = new HashMap<>();
 
-        try (BufferedReader br = new BufferedReader(new FileReader(CSV_FILE))) {
+        try (BufferedReader br = new BufferedReader(new FileReader(csvFile))) {
             MapReduceTask mapReduceTask = new MapReduceTask();
             mapReduceTask.processFile(br, cityTemperatures);
             mapReduceTask.computeAverages(cityTemperatures);
