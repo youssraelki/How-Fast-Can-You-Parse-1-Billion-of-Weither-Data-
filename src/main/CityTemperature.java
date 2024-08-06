@@ -5,18 +5,24 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class CityTemperature {
-    private static final String CSV_FILE = "merged_data[1].csv";
+    private static final String CSV_FILE_ENV = "CSV_FILE_PATH";
     private static final String CSV_SPLIT_BY = ",";
     private static final int CITY_INDEX = 1;
     private static final int TEMPERATURE_INDEX = 2;
 
     public static void main(String[] args) {
-        long startTime = System.nanoTime(); // Start of time measurement
-        long startMemory = Runtime.getRuntime().totalMemory() - Runtime.getRuntime().freeMemory(); // Start of memory measurement
+        String csvFile = System.getenv(CSV_FILE_ENV);
+        if (csvFile == null) {
+            System.err.println("La variable d'environnement CSV_FILE_PATH n'est pas définie.");
+            System.exit(1);
+        }
+
+        long startTime = System.nanoTime(); 
+        long startMemory = Runtime.getRuntime().totalMemory() - Runtime.getRuntime().freeMemory(); 
 
         Map<String, double[]> cityTemperatures = new HashMap<>();
 
-        try (BufferedReader br = new BufferedReader(new FileReader(CSV_FILE))) {
+        try (BufferedReader br = new BufferedReader(new FileReader(csvFile))) {
             processFile(br, cityTemperatures);
             computeAverages(cityTemperatures);
             printResults(cityTemperatures);
@@ -24,10 +30,9 @@ public class CityTemperature {
             e.printStackTrace();
         }
 
-        long endTime = System.nanoTime(); // End of time measurement
-        long endMemory = Runtime.getRuntime().totalMemory() - Runtime.getRuntime().freeMemory(); // End of memory measurement
+        long endTime = System.nanoTime(); 
+        long endMemory = Runtime.getRuntime().totalMemory() - Runtime.getRuntime().freeMemory(); 
 
-        // Calculate and display the execution time and memory used
         long duration = endTime - startTime;
         long memoryUsed = endMemory - startMemory;
 
@@ -37,13 +42,10 @@ public class CityTemperature {
 
     private static void processFile(BufferedReader br, Map<String, double[]> cityTemperatures) throws IOException {
         String line;
-        // Read and ignore the first line (headers)
-        br.readLine();
+        br.readLine(); 
 
         while ((line = br.readLine()) != null) {
             String[] data = line.split(CSV_SPLIT_BY);
-            
-            // Verify if the line contains the expected number of columns
             if (data.length < 3) {
                 System.err.println("Ligne mal formée: " + line);
                 continue;
@@ -52,21 +54,19 @@ public class CityTemperature {
             String city = data[CITY_INDEX];
             String temperatureStr = data[TEMPERATURE_INDEX];
 
-            // Check if the temperature data is a valid number
             if (!isNumeric(temperatureStr)) {
-                // Ignore this line if the temperature is not valid
                 continue;
             }
 
             double temperature = Double.parseDouble(temperatureStr);
             cityTemperatures.compute(city, (k, v) -> {
                 if (v == null) {
-                    return new double[]{temperature, temperature, temperature, 1}; // max, min, sum, count
+                    return new double[]{temperature, temperature, temperature, 1};
                 } else {
-                    v[0] = Math.max(v[0], temperature); // Maximum temperature
-                    v[1] = Math.min(v[1], temperature); // Minimum temperature
-                    v[2] += temperature; // Sum of temperatures
-                    v[3]++; // Number of temperatures
+                    v[0] = Math.max(v[0], temperature);
+                    v[1] = Math.min(v[1], temperature);
+                    v[2] += temperature;
+                    v[3]++;
                     return v;
                 }
             });
@@ -76,7 +76,7 @@ public class CityTemperature {
     private static void computeAverages(Map<String, double[]> cityTemperatures) {
         for (Map.Entry<String, double[]> entry : cityTemperatures.entrySet()) {
             double[] temps = entry.getValue();
-            temps[2] /= temps[3]; // Calculation of the average temperature
+            temps[2] /= temps[3];
         }
     }
 
@@ -96,6 +96,6 @@ public class CityTemperature {
             return true;
         } catch (NumberFormatException e) {
             return false;
-        }
-    }
+        }
+    }
 }
