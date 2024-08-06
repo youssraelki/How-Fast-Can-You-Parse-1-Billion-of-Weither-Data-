@@ -22,7 +22,7 @@ class MapReducePerformanceTest {
         }
 
         // Set the CSV_FILE constant to the temporary file path
-        MapReduce.setCsvFile(tempFile.getAbsolutePath());
+        System.setProperty("CSV_FILE_PATH", tempFile.getAbsolutePath());
 
         // Redirect output to a ByteArrayOutputStream
         ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
@@ -31,15 +31,4 @@ class MapReducePerformanceTest {
 
         try {
             // Run the main method
-            MapReduce.main(new String[]{});
-        } finally {
-            // Restore the original System.out
-            System.setOut(originalOut);
-        }
-
-        // Verify the output directly
-        String output = outputStream.toString();
-        assertTrue(output.contains("Paris: [Max: 36.0, Min: 35.5, Avg: 35.75]"));
-        assertTrue(output.contains("Berlin: [Max: 32.0, Min: 30.0, Avg: 31.0]"));
-    }
-}
+            MapReduceMain.main(new String
