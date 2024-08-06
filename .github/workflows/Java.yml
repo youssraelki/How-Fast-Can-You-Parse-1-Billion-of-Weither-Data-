@@ -7,7 +7,7 @@ on:
     branches: [ main ]
 
 env:
-  CSV_FILE_PATH: 'data/merged_data.csv'  # Variable d'environnement globale pour le chemin du fichier CSV
+  CSV_FILE_PATH: 'merged_data[1].csv'  # Variable d'environnement globale pour le chemin du fichier CSV
 
 jobs:
   build:
