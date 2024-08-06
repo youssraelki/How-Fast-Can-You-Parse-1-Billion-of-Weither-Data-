@@ -64,6 +64,11 @@ jobs:
         distribution: 'temurin'
         java-version: '22'
 
+    - name: Configure Git
+      run: |
+        git config --global user.email "you@example.com"
+        git config --global user.name "Your Name"
+
     - name: Compile Java code for CSV merge
       run: |
         javac -d out src/task/GenerateCSV1.java
@@ -91,8 +96,9 @@ jobs:
       run: |
         echo "*.csv" >> .gitignore
         git rm --cached ${{ env.CSV_FILE_PATH }}
+        git add .gitignore
         git commit -m "Add CSV files to .gitignore and remove from Git"
 
     - name: Verify if the file is ignored
       run: |
-        git check-ignore -v ${{ env.CSV_FILE_PATH }} || echo "The file is NOT ignored by .gitignore."
+        git check-ignore -v ${{ env.CSV_FILE_PATH }} || echo "The file is NOT ignored by .gitignore."
