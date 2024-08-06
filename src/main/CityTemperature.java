@@ -13,12 +13,12 @@ public class CityTemperature {
     public static void main(String[] args) {
         String csvFile = System.getenv(CSV_FILE_ENV);
         if (csvFile == null) {
-            System.err.println("La variable d'environnement CSV_FILE_PATH n'est pas définie.");
+            System.err.println("CSV_FILE_PATH");
             System.exit(1);
         }
 
-        long startTime = System.nanoTime(); 
-        long startMemory = Runtime.getRuntime().totalMemory() - Runtime.getRuntime().freeMemory(); 
+        long startTime = System.nanoTime();
+        long startMemory = Runtime.getRuntime().totalMemory() - Runtime.getRuntime().freeMemory();
 
         Map<String, double[]> cityTemperatures = new HashMap<>();
 
@@ -30,8 +30,8 @@ public class CityTemperature {
             e.printStackTrace();
         }
 
-        long endTime = System.nanoTime(); 
-        long endMemory = Runtime.getRuntime().totalMemory() - Runtime.getRuntime().freeMemory(); 
+        long endTime = System.nanoTime();
+        long endMemory = Runtime.getRuntime().totalMemory() - Runtime.getRuntime().freeMemory();
 
         long duration = endTime - startTime;
         long memoryUsed = endMemory - startMemory;
@@ -42,7 +42,7 @@ public class CityTemperature {
 
     private static void processFile(BufferedReader br, Map<String, double[]> cityTemperatures) throws IOException {
         String line;
-        br.readLine(); 
+        br.readLine(); // Skip header
 
         while ((line = br.readLine()) != null) {
             String[] data = line.split(CSV_SPLIT_BY);
@@ -96,6 +96,6 @@ public class CityTemperature {
             return true;
         } catch (NumberFormatException e) {
             return false;
-        }
-    }
+        }
+    }
 }
