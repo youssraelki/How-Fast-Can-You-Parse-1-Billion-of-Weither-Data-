@@ -95,8 +95,4 @@ jobs:
 
     - name: Verify if the file is ignored
       run: |
-        if git check-ignore -q ${{ env.CSV_FILE_PATH }}; then
-          echo "The file is ignored by .gitignore."
-        else
-          echo "The file is NOT ignored by .gitignore."
-        fi
+        git check-ignore -v ${{ env.CSV_FILE_PATH }} || echo "The file is NOT ignored by .gitignore."
