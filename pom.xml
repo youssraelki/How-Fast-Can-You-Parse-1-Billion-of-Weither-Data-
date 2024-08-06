@@ -7,6 +7,9 @@
     <version>1.0-SNAPSHOT</version>
     <packaging>jar</packaging>
 
+    <name>Votre Projet</name>
+    <description>Un projet pour le traitement de données avec MapReduce</description>
+
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
@@ -56,6 +59,16 @@
                 <version>3.2.0</version>
                 <configuration>
                     <skipNonExistingDirectories>true</skipNonExistingDirectories>
+                </configuration>
+            </plugin>
+
+            <!-- Plugin pour l'exécution de la classe principale -->
+            <plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>exec-maven-plugin</artifactId>
+                <version>3.0.0</version>
+                <configuration>
+                    <mainClass>com.yourcompany.MapReduceMain</mainClass>
                 </configuration>
             </plugin>
         </plugins>
