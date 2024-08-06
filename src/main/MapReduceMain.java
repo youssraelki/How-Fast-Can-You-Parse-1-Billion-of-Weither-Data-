@@ -5,7 +5,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class MapReduceMain {
-    private static final String CSV_FILE = "merged_data.csv";
+    private static final String CSV_FILE = "merged_data[1].csv";
 
     public static void main(String[] args) {
         long startTime = System.nanoTime(); // Start of time measurement
