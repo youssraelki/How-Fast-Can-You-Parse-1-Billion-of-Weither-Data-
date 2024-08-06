@@ -1,96 +1,98 @@
-### Contribution Guide
+# Contribuer au Projet
 
-Thank you for your interest in contributing to our project "How-Fast-Can-You-Parse-1-Billion-of-Weather-Data"! Here is a guide to help you participate effectively.
+Merci pour votre intérêt à contribuer à ce projet "How-Fast-Can-You-Parse-1-Billion-of-Weather-Data" ! Voici un guide pour vous aider à participer efficacement.
 
-## Project Structure
+## Structure du Projet
 
-### Main Files
+### Fichiers Principaux
 
-- *src/*: Contains the Java code for processing CSV files.
-  - *CityTemperature.java*: Main code for processing the large CSV file and calculating temperature statistics per city.
+- src/: Contient le code Java pour le traitement des fichiers CSV.
+  - CityTemperature.java: Code principal pour traiter le grand fichier CSV et calculer les statistiques de température par ville.
 
-- *pom.xml*: Maven configuration file to manage project dependencies and configurations.
+- pom.xml: Fichier de configuration Maven pour gérer les dépendances et configurations du projet.
 
-- *src/test/CityTemperatureTest.java*: Contains unit tests to verify that individual methods of the code work correctly.
+- src/test/CityTemperatureTest.java: Contient des tests unitaires pour vérifier que les méthodes individuelles du code fonctionnent correctement.
 
-- *src/test/CityTemperatureIntegrationTest.java*: Contains integration tests to verify that different parts of the code work together as expected.
+- src/test/CityTemperatureIntegrationTest.java: Contient des tests d'intégration pour vérifier que différentes parties du code fonctionnent ensemble comme prévu.
 
-- *.github/workflows/java.yml*: YAML file for continuous integration with GitHub Actions. This workflow compiles and runs the Java code, checks the files, and measures performance.
+- .github/workflows/java.yml: Fichier YAML pour l'intégration continue avec GitHub Actions. Ce workflow compile et exécute le code Java, vérifie les fichiers et mesure les performances.
 
-- *.gitignore*: Contains rules to ignore large files to prevent them from being included in commits.
+- .gitignore: Contient des règles pour ignorer les fichiers volumineux afin qu'ils ne soient pas inclus dans les commits.
 
-## Branch Distribution
+## Répartition des Branches
 
-- *main*: Main branch containing the stable version of the code. All new features and bug fixes must go through this branch after being tested and validated.
+- main: Branche principale contenant la version stable du code. Toutes les nouvelles fonctionnalités et corrections de bogues doivent passer par cette branche après avoir été testées et validées.
 
-## Libraries Used
+## Bibliothèques Utilisées
 
-- *java.io.BufferedReader*: To read CSV files efficiently using a buffer to minimize disk access.
-- *java.io.FileReader*: To open and read CSV files.
-- *java.util.HashMap*: To store temperatures per city, allowing quick access to the data.
-- *java.util.Map*: Interface used to store key-value pairs representing temperatures per city.
+- java.io.BufferedReader: Pour lire les fichiers CSV de manière efficace en utilisant un tampon afin de minimiser l'accès au disque.
+- java.io.FileReader: Pour ouvrir et lire les fichiers CSV.
+- java.util.HashMap: Pour stocker les températures par ville, permettant un accès rapide aux données.
+- java.util.Map: Interface utilisée pour stocker des paires clé-valeur représentant les températures par ville.
 
-### Why These Libraries?
-- *BufferedReader and FileReader*: Provide a quick and simple way to read files line by line, which is essential for processing large CSV files.
-- *HashMap*: Allows storing and updating temperatures efficiently, offering quick data lookup and updates.
+### Pourquoi Ces Bibliothèques ?
+- BufferedReader et FileReader: Fournissent un moyen rapide et simple de lire les fichiers ligne par ligne, ce qui est essentiel pour traiter de grands fichiers CSV.
+- HashMap: Permet de stocker et de mettre à jour les températures de manière efficace, offrant une recherche et des mises à jour rapides des données.
 
-## Testing
+## Tests
 
-### Initial Validation
+### Validation Initiale
 
-- *GitHub Actions*: Used to run unit, integration, and end-to-end tests automatically on pushes and pull requests to the main branch. This approach ensures that changes are validated before being merged into the main branch.
+- GitHub Actions: Utilisé pour exécuter automatiquement des tests unitaires, d'intégration et de bout en bout lors des pushs et des pull requests vers la branche principale. Cette approche garantit que les modifications sont validées avant d'être fusionnées dans la branche principale.
 
-### Types of Tests
+### Types de Tests
 
-- *Unit Tests*: Verify that individual methods work correctly.
-- *Integration Tests*: Ensure that different parts of the code work together as expected, especially the processing and validation of CSV files.
+- Tests Unitaires: Vérifient que les méthodes individuelles fonctionnent correctement.
+- Tests d'Intégration: Assurent que différentes parties du code fonctionnent ensemble comme prévu, en particulier le traitement et la validation des fichiers CSV.
 
-## Integrity
+## Intégrité
 
-### Integration Process
+### Processus d'Intégration
 
-- *CI/CD Validation*: GitHub Actions automatically validates changes. Tests must pass for changes to be merged into the main branch.
-- *Code Review*: Pull Requests must be reviewed by team members to ensure code quality and consistency.
+- Validation CI/CD: GitHub Actions valide automatiquement les modifications. Les tests doivent réussir pour que les modifications soient fusionnées dans la branche principale.
+- Revue de Code: Les Pull Requests doivent être examinées par des membres de l'équipe pour garantir la qualité et la cohérence du code.
 
-## How to Contribute
+## Comment Contribuer
 
-### 1. Fork the Repository
-- Fork this repository by clicking the "Fork" button at the top of the GitHub page.
+### 1. Forker le Dépôt
+- Forkez ce dépôt en cliquant sur le bouton "Fork" en haut de la page GitHub.
 
-### 2. Clone Your Forked Repository
-- Clone your forked repository to your local machine:
+### 2. Cloner Votre Dépôt Forké
+- Clonez votre dépôt forké sur votre machine locale :
     sh
     git clone https://github.com/your-username/How-Fast-Can-You-Parse-1-Billion-of-Weather-Data.git
     cd How-Fast-Can-You-Parse-1-Billion-of-Weather-Data
     
 
-### 3. Create a Branch
-- Create a new branch for your changes:
+### 3. Créer une Branche
+- Créez une nouvelle branche pour vos modifications :
     sh
     git checkout -b your-branch-name
     
 
-### 4. Make Changes
-- Make the necessary changes to the following files:
-  - *pom.xml*: Modify dependencies or configurations if needed.
-  - *src/main/CityTemperature.java*: Make improvements or fixes to the main code.
-  - *src/test/CityTemperatureTest.java*: Add or modify unit tests to verify new features or fixes.
-  - *src/test/CityTemperatureIntegrationTest.java*: Add or modify integration tests to verify the interaction between different parts of the code.
-  - *.github/workflows/java.yml*: Modify the workflow if you need to adjust CI/CD steps or add new tests.
+### 4. Apporter des Modifications
+- Apportez les modifications nécessaires aux fichiers suivants :
+  - pom.xml: Modifiez les dépendances ou configurations si nécessaire.
+  - src/main/CityTemperature.java: Apportez des améliorations ou corrections au code principal.
+  - src/test/CityTemperatureTest.java: Ajoutez ou modifiez les tests unitaires pour vérifier les nouvelles fonctionnalités ou corrections.
+  - src/test/CityTemperatureIntegrationTest.java: Ajoutez ou modifiez les tests d'intégration pour vérifier l'interaction entre différentes parties du code.
+  - .github/workflows/java.yml: Modifiez le workflow si vous devez ajuster les étapes CI/CD ou ajouter de nouveaux tests.
 
-### 5. Test Your Changes
-- Ensure all changes are properly tested. You can run the tests locally using Maven:
+### 5. Tester Vos Modifications
+- Assurez-vous que toutes les modifications sont correctement testées. Vous pouvez exécuter les tests localement en utilisant Maven :
     sh
     mvn test
     
 
-### 6. Commit and Push
-- Commit your changes with a descriptive message:
+### 6. Committer et Pousser
+- Committez vos modifications avec un message descriptif :
     sh
     git add .
-    git commit -m "Description of changes made"
+    git commit -m "Description des modifications apportées"
     git push origin your-branch-name
     
 
-### 7. Create a Pull Request
-- Go to your forked repository on GitHub and open a Pull Request to the main branch of the original repository. Describe the changes you made and why they are important.
+### 7. Créer une Pull Request
+- Allez sur votre dépôt forké sur GitHub et ouvrez une Pull Request vers la branche principale du dépôt d'origine. Décrivez les modifications que vous avez apportées et pourquoi elles sont importantes.
+
+Merci pour votre contribution !
