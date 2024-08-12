@@ -34,7 +34,7 @@ public class MapReduceMain {
 
         // Shuffle/Sort phase: gather all the results
         Map<String, List<double[]>> shuffledData = new HashMap<>();
-        for (Future<Map<String, double[]>>> future : futures) {
+        for (Future<Map<String, double[]>> future : futures) {
             try {
                 Map<String, double[]> mapResult = future.get();
                 shuffle(mapResult, shuffledData);
