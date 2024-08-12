@@ -23,18 +23,21 @@ public class MapReduceMain {
 
         try (BufferedReader br = new BufferedReader(new FileReader(csvFile))) {
             String line;
-            String[] batch = new String[BATCH_SIZE];
-            int index = 0;
+            List<String> batch = new ArrayList<>(BATCH_SIZE);
 
             while ((line = br.readLine()) != null) {
-                batch[index++] = line;
-                if (index == BATCH_SIZE) {
-                    futures.add(executor.submit(() -> processBatch(batch, index)));
-                    index = 0;
+                batch.add(line);
+                if (batch.size() == BATCH_SIZE) {
+                    // Create a copy of the batch for processing
+                    List<String> batchCopy = new ArrayList<>(batch);
+                    futures.add(executor.submit(() -> processBatch(batchCopy)));
+                    batch.clear(); // Clear the batch list
                 }
             }
-            if (index > 0) {
-                futures.add(executor.submit(() -> processBatch(batch, index)));
+            if (!batch.isEmpty()) {
+                // Process the remaining lines
+                List<String> batchCopy = new ArrayList<>(batch);
+                futures.add(executor.submit(() -> processBatch(batchCopy)));
             }
 
             Map<String, double[]> finalResults = new ConcurrentHashMap<>();
@@ -70,10 +73,10 @@ public class MapReduceMain {
         }
     }
 
-    private static Map<String, double[]> processBatch(String[] batch, int size) {
+    private static Map<String, double[]> processBatch(List<String> batch) {
         Map<String, double[]> result = new HashMap<>();
-        for (int i = 0; i < size; i++) {
-            String[] data = batch[i].split(",");
+        for (String line : batch) {
+            String[] data = line.split(",");
             if (data.length < 3 || !isNumeric(data[2])) {
                 continue;
             }
