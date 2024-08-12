@@ -8,7 +8,7 @@ public class MapReduceMain {
     private static final String CSV_FILE_ENV = "CSV_FILE_PATH";
     private static final int NUM_THREADS = Runtime.getRuntime().availableProcessors();
 
-    public static void main(String[] args) throws IOException {
+    public static void main(String[] args) {
         String csvFile = System.getenv(CSV_FILE_ENV);
         if (csvFile == null) {
             System.err.println("CSV_FILE_PATH n'est pas défini");
@@ -18,20 +18,16 @@ public class MapReduceMain {
         long startTime = System.nanoTime();
         long startMemory = Runtime.getRuntime().totalMemory() - Runtime.getRuntime().freeMemory();
 
-        // Créer un pool de threads pour le traitement parallèle
         ExecutorService executor = Executors.newFixedThreadPool(NUM_THREADS);
-        
-        // Lire le fichier en blocs
+        List<Future<Map<String, double[]>>> futures = new ArrayList<>();
+
         try (BufferedReader br = new BufferedReader(new FileReader(csvFile))) {
-            List<Future<Map<String, double[]>>> futures = new ArrayList<>();
             String line;
-            
-            // Lire le fichier ligne par ligne et soumettre des tâches au pool de threads
             while ((line = br.readLine()) != null) {
                 final String lineToProcess = line;
                 futures.add(executor.submit(() -> map(lineToProcess)));
             }
-            
+
             // Fusionner les résultats des tâches Map
             Map<String, double[]> mergedResults = new HashMap<>();
             for (Future<Map<String, double[]>> future : futures) {
@@ -42,9 +38,16 @@ public class MapReduceMain {
                     e.printStackTrace();
                 }
             }
-            
+
             executor.shutdown();
-            executor.awaitTermination(1, TimeUnit.MINUTES);
+            try {
+                if (!executor.awaitTermination(1, TimeUnit.MINUTES)) {
+                    executor.shutdownNow();
+                }
+            } catch (InterruptedException e) {
+                executor.shutdownNow();
+                Thread.currentThread().interrupt(); // Réinterrompre le thread actuel
+            }
 
             // Réduire les résultats
             Map<String, double[]> finalResults = reduce(mergedResults);
@@ -58,6 +61,8 @@ public class MapReduceMain {
 
             System.out.println("Temps d'exécution: " + (endTime - startTime) / 1_000_000 + " ms");
             System.out.println("Mémoire utilisée: " + (endMemory - startMemory) / 1024 + " KB");
+        } catch (IOException e) {
+            e.printStackTrace();
         }
     }
 
