@@ -1,12 +1,10 @@
-import java.io.BufferedReader;
-import java.io.FileReader;
-import java.io.IOException;
+import java.io.*;
 import java.util.*;
 import java.util.concurrent.*;
 
 public class MapReduceMain {
     private static final String CSV_FILE_ENV = "CSV_FILE_PATH";
-    private static final int NUM_THREADS = 4;
+    private static final int NUM_THREADS = Runtime.getRuntime().availableProcessors(); // Nombre de CPU disponibles
 
     public static void main(String[] args) {
         String csvFile = System.getenv(CSV_FILE_ENV);
@@ -21,7 +19,6 @@ public class MapReduceMain {
         ExecutorService executor = Executors.newFixedThreadPool(NUM_THREADS);
         List<Future<Map<String, double[]>>> futures = new ArrayList<>();
 
-        // Map phase: each thread processes a portion of the file
         try (BufferedReader br = new BufferedReader(new FileReader(csvFile))) {
             String line;
             while ((line = br.readLine()) != null) {
@@ -33,15 +30,15 @@ public class MapReduceMain {
         }
 
         // Shuffle/Sort phase: gather all the results
-        Map<String, List<double[]>> shuffledData = new HashMap<>();
-        for (Future<Map<String, double[]>> future : futures) {
+        Map<String, List<double[]>> shuffledData = new ConcurrentHashMap<>();
+        futures.forEach(future -> {
             try {
                 Map<String, double[]> mapResult = future.get();
                 shuffle(mapResult, shuffledData);
             } catch (InterruptedException | ExecutionException e) {
                 e.printStackTrace();
             }
-        }
+        });
 
         executor.shutdown();
 
@@ -77,18 +74,15 @@ public class MapReduceMain {
 
     // Shuffle/Sort function: merge the results from different mappers
     private static void shuffle(Map<String, double[]> mapResult, Map<String, List<double[]>> shuffledData) {
-        for (Map.Entry<String, double[]> entry : mapResult.entrySet()) {
-            shuffledData.computeIfAbsent(entry.getKey(), k -> new ArrayList<>()).add(entry.getValue());
-        }
+        mapResult.forEach((city, temps) -> 
+            shuffledData.computeIfAbsent(city, k -> Collections.synchronizedList(new ArrayList<>())).add(temps)
+        );
     }
 
     // Reduce function: calculate the max, min, and average for each city
     private static Map<String, double[]> reduce(Map<String, List<double[]>> shuffledData) {
         Map<String, double[]> result = new HashMap<>();
-        for (Map.Entry<String, List<double[]>> entry : shuffledData.entrySet()) {
-            String city = entry.getKey();
-            List<double[]> tempsList = entry.getValue();
-
+        shuffledData.forEach((city, tempsList) -> {
             double max = Double.NEGATIVE_INFINITY;
             double min = Double.POSITIVE_INFINITY;
             double sum = 0;
@@ -103,7 +97,7 @@ public class MapReduceMain {
 
             double avg = sum / count;
             result.put(city, new double[]{max, min, avg});
-        }
+        });
         return result;
     }
 
