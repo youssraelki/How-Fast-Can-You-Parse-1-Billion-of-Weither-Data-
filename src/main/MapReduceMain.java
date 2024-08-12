@@ -1,11 +1,12 @@
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
+import java.util.concurrent.*;
 
 public class MapReduceMain {
     private static final String CSV_FILE_ENV = "CSV_FILE_PATH";
+    private static final int NUM_THREADS = 4;
 
     public static void main(String[] args) {
         String csvFile = System.getenv(CSV_FILE_ENV);
@@ -14,87 +15,100 @@ public class MapReduceMain {
             System.exit(1);
         }
 
-        long startTime = System.nanoTime(); // Start of time measurement
-        long startMemory = Runtime.getRuntime().totalMemory() - Runtime.getRuntime().freeMemory(); // Start of memory measurement
+        long startTime = System.nanoTime();
+        long startMemory = Runtime.getRuntime().totalMemory() - Runtime.getRuntime().freeMemory();
 
-        Map<String, double[]> cityTemperatures = new HashMap<>();
+        ExecutorService executor = Executors.newFixedThreadPool(NUM_THREADS);
+        List<Future<Map<String, double[]>>> futures = new ArrayList<>();
 
+        // Map phase: each thread processes a portion of the file
         try (BufferedReader br = new BufferedReader(new FileReader(csvFile))) {
-            MapReduceTask mapReduceTask = new MapReduceTask();
-            mapReduceTask.processFile(br, cityTemperatures);
-            mapReduceTask.computeAverages(cityTemperatures);
-            mapReduceTask.printResults(cityTemperatures);
+            String line;
+            while ((line = br.readLine()) != null) {
+                final String lineToProcess = line;
+                futures.add(executor.submit(() -> map(lineToProcess)));
+            }
         } catch (IOException e) {
             e.printStackTrace();
         }
 
-        long endTime = System.nanoTime(); // End of time measurement
-        long endMemory = Runtime.getRuntime().totalMemory() - Runtime.getRuntime().freeMemory(); // End of memory measurement
+        // Shuffle/Sort phase: gather all the results
+        Map<String, List<double[]>> shuffledData = new HashMap<>();
+        for (Future<Map<String, double[]>>> future : futures) {
+            try {
+                Map<String, double[]> mapResult = future.get();
+                shuffle(mapResult, shuffledData);
+            } catch (InterruptedException | ExecutionException e) {
+                e.printStackTrace();
+            }
+        }
 
-        // Calculate and display the execution time and memory used
-        long duration = endTime - startTime;
-        long memoryUsed = endMemory - startMemory;
+        executor.shutdown();
 
-        System.out.println("Temps d'exécution: " + duration / 1_000_000 + " ms");
-        System.out.println("Mémoire utilisée: " + memoryUsed / 1024 + " KB");
+        // Reduce phase: aggregate the results
+        Map<String, double[]> reducedData = reduce(shuffledData);
+
+        long endTime = System.nanoTime();
+        long endMemory = Runtime.getRuntime().totalMemory() - Runtime.getRuntime().freeMemory();
+
+        // Print results
+        reducedData.forEach((city, temps) ->
+                System.out.println(city + ": [Max: " + temps[0] + ", Min: " + temps[1] + ", Avg: " + temps[2] + "]"));
+
+        System.out.println("Temps d'exécution: " + (endTime - startTime) / 1_000_000 + " ms");
+        System.out.println("Mémoire utilisée: " + (endMemory - startMemory) / 1024 + " KB");
     }
-}
 
-class MapReduceTask {
-    private static final String CSV_SPLIT_BY = ",";
-    private static final int CITY_INDEX = 1;
-    private static final int TEMPERATURE_INDEX = 2;
+    // Map function: process each line and return a partial result
+    private static Map<String, double[]> map(String line) {
+        Map<String, double[]> result = new HashMap<>();
+        String[] data = line.split(",");
+        if (data.length < 3) {
+            return result;
+        }
+        String city = data[1];
+        String tempStr = data[2];
+        if (isNumeric(tempStr)) {
+            double temperature = Double.parseDouble(tempStr);
+            result.put(city, new double[]{temperature, temperature, temperature, 1});
+        }
+        return result;
+    }
 
-    void processFile(BufferedReader br, Map<String, double[]> cityTemperatures) throws IOException {
-        String line;
-        // Read and ignore the first line (headers)
-        br.readLine();
+    // Shuffle/Sort function: merge the results from different mappers
+    private static void shuffle(Map<String, double[]> mapResult, Map<String, List<double[]>> shuffledData) {
+        for (Map.Entry<String, double[]> entry : mapResult.entrySet()) {
+            shuffledData.computeIfAbsent(entry.getKey(), k -> new ArrayList<>()).add(entry.getValue());
+        }
+    }
 
-        while ((line = br.readLine()) != null) {
-            String[] data = line.split(CSV_SPLIT_BY);
+    // Reduce function: calculate the max, min, and average for each city
+    private static Map<String, double[]> reduce(Map<String, List<double[]>> shuffledData) {
+        Map<String, double[]> result = new HashMap<>();
+        for (Map.Entry<String, List<double[]>> entry : shuffledData.entrySet()) {
+            String city = entry.getKey();
+            List<double[]> tempsList = entry.getValue();
 
-            if (data.length < 3) {
-                System.err.println("Ligne mal formée: " + line);
-                continue;
+            double max = Double.NEGATIVE_INFINITY;
+            double min = Double.POSITIVE_INFINITY;
+            double sum = 0;
+            int count = 0;
+
+            for (double[] temps : tempsList) {
+                max = Math.max(max, temps[0]);
+                min = Math.min(min, temps[1]);
+                sum += temps[2];
+                count += temps[3];
             }
 
-            String city = data[CITY_INDEX];
-            String temperatureStr = data[TEMPERATURE_INDEX];
-
-            if (!isNumeric(temperatureStr)) {
-                continue;
-            }
-
-            double temperature = Double.parseDouble(temperatureStr);
-            cityTemperatures.compute(city, (k, v) -> {
-                if (v == null) {
-                    return new double[]{temperature, temperature, temperature, 1}; // max, min, sum, count
-                } else {
-                    v[0] = Math.max(v[0], temperature); // Maximum temperature
-                    v[1] = Math.min(v[1], temperature); // Minimum temperature
-                    v[2] += temperature; // Sum of temperatures
-                    v[3]++; // Number of temperatures
-                    return v;
-                }
-            });
+            double avg = sum / count;
+            result.put(city, new double[]{max, min, avg});
         }
+        return result;
     }
 
-    void computeAverages(Map<String, double[]> cityTemperatures) {
-        for (Map.Entry<String, double[]> entry : cityTemperatures.entrySet()) {
-            double[] temps = entry.getValue();
-            temps[2] /= temps[3]; // Calculation of the average temperature
-        }
-    }
-
-    void printResults(Map<String, double[]> cityTemperatures) {
-        for (Map.Entry<String, double[]> entry : cityTemperatures.entrySet()) {
-            double[] temps = entry.getValue();
-            System.out.println(entry.getKey() + ": [Max: " + temps[0] + ", Min: " + temps[1] + ", Avg: " + temps[2] + "]");
-        }
-    }
-
-    private boolean isNumeric(String str) {
+    // Helper function to check if a string is numeric
+    private static boolean isNumeric(String str) {
         if (str == null) {
             return false;
         }
